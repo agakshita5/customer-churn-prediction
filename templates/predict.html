@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Customer Churn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="{{ url_for('static', filename='css/predict.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container-fluid">
+            <button class="btn" type="button" onclick="window.location.href='home'">Back</button>
+        </div>
+    </nav>
+
+    <div class="container col-md-6 mx-auto">
+        <h1>Predict Customer Churn</h1>
+        <h2>Enter Customer Details</h2>
+        <form action="/predict" method="post">
+            <div class="mb-3">
+                <label for="age">Enter Age:</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+            <div class="mb-3">
+                <label for="gender">Enter Gender:</label>
+                <select id="gender" name="gender" required>
+                  <option value="" disabled selected>Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="mb-3">
+                <label for="tenure">Enter Tenure:</label>
+                <input type="number" id="tenure" name="tenure" required>
+            </div>
+            <div class="mb-3">
+                <label for="usage_freq">Enter Usage Frequency:</label>
+                <input type="number" id="usage_freq" name="usage_freq" required>
+            </div>
+            <div class="mb-3">
+                <label for="support_calls">Enter Number of Support Calls:</label>
+                <input type="number" id="support_calls" name="support_calls" required>
+            </div>
+            <div class="mb-3">
+                <label for="pay_delay">Enter Payment Delay (Days):</label>
+                <input type="number" id="pay_delay" name="pay_delay" required>
+            </div>
+            <div class="mb-3">
+                <label for="sub_type">Enter Type of Subscription:</label>
+                <select id="sub_type" name="sub_type" required>
+                  <option value="" disabled selected>Select Subscription Type</option>
+                  <option value="Premium">Premium</option>
+                  <option value="Basic">Basic</option>
+                  <option value="Standard">Standard</option>
+              </select>
+            </div>
+            <div class="mb-3">
+                <label for="con_len">Enter Contract Length:</label>
+                <select id="con_len" name="con_len" required>
+                  <option value="" disabled selected>Select Contract Length</option>
+                  <option value="Annual">Annual</option>
+                  <option value="Quaterly">Quaterly</option>
+                  <option value="Monthly">Monthly</option>
+              </select>
+            </div>
+            <div class="mb-3">
+                <label for="total_sp">Enter Total Spend:</label>
+                <input type="number" id="total_sp" name="total_sp" required>
+            </div>
+            <div class="mb-3">
+                <label for="last_int">Enter Last Interaction (Days Ago):</label>
+                <input type="number" id="last_int" name="last_int" required>
+            </div>
+            <div class="text-center">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>
