@@ -10,14 +10,14 @@
 <body>
     <nav class="navbar">
         <div class="container-fluid">
-            <button class="btn" type="button" onclick="window.location.href='home'">Back</button>
+            <button class="btn" type="button" onclick="window.location.href='/'">Back</button>
         </div>
     </nav>
 
     <div class="container col-md-6 mx-auto">
         <h1>Predict Customer Churn</h1>
         <h2>Enter Customer Details</h2>
-        <form action="/predict" method="post">
+        <form action="/predict" method="POST">
             <div class="mb-3">
                 <label for="age">Enter Age:</label>
                 <input type="number" id="age" name="age" required>

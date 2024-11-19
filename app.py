@@ -4,8 +4,9 @@ import pandas as pd
 import pickle
 import os
 
+
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = os.urandom(24) 
 
 def calculate_risk_level(features):
     risk_score = 0
@@ -33,11 +34,11 @@ def calculate_clv(features):
     clv = avg_monthly_revenue * expected_lifetime
     return round(clv, 2)
 
-@app.route("/home")
+@app.route("/")
 def home():
     return render_template('home.html')
 
-@app.route("/predict", methods=['GET', 'POST'])
+@app.route("/predict", methods=['POST', 'GET'])
 def predict():
     if request.method == 'POST':
         try:
@@ -62,7 +63,7 @@ def predict():
             user_df = pd.DataFrame([user_data])
             categorical_features = ['gender', 'subscription_type', 'contract_length']
             user_encoded = ohe.transform(user_df[categorical_features])
-            user_df_encoded = pd.DataFrame(user_encoded.toarray(), columns=ohe.get_feature_names_out(categorical_features))
+            user_df_encoded = pd.DataFrame(user_encoded, columns=ohe.get_feature_names_out(categorical_features))
             final_df = pd.concat([user_df.drop(categorical_features, axis=1).reset_index(drop=True), user_df_encoded.reset_index(drop=True)], axis=1)
             final_df = final_df.reindex(columns=model.feature_names_in_, fill_value=0)
 
@@ -70,6 +71,7 @@ def predict():
             clv = calculate_clv(user_data)
 
             prediction = model.predict(final_df)[0]
+
             session['res'] = "Churned" if prediction == 1 else "Not Churned"
             session['risk_level'] = user_data['risk_level']
             session['clv'] = clv
@@ -87,7 +89,7 @@ def result():
     clv = session.get("clv")
     if res is None:
         return redirect(url_for("predict"))
-    return render_template('result.html', prediction=res, risk_level=rl, clv=clv)
+    return render_template('result.html', res=res, risk_level=rl, clv=clv)
 
 if __name__ == "__main__":
     app.run(debug=True)
