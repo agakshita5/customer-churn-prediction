@@ -4,7 +4,7 @@ import pandas as pd
 import pickle
 import os
 
-
+port = int(os.environ.get('PORT', 5000))
 app = Flask(__name__)
 app.secret_key = os.urandom(24) 
 
@@ -92,4 +92,4 @@ def result():
     return render_template('result.html', res=res, risk_level=rl, clv=clv)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=port)
