@@ -1,7 +1,4 @@
 Flask==3.0.3
-flask_cors
-gunicorn==23.0.0
-matplotlib-inline==0.1.7
 numpy==1.26.4
 pandas==2.2.2
 requests==2.31.0
