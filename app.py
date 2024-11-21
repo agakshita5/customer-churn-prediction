@@ -1,12 +1,14 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
-from sklearn.preprocessing import OneHotEncoder
+# from flask_cors import CORS
 import pandas as pd
 import pickle
 import os
+from datetime import timedelta
 
-port = int(os.environ.get('PORT', 5000))
 app = Flask(__name__)
 app.secret_key = os.urandom(24) 
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)  # Set session timeout duration
+# CORS(app)
 
 def calculate_risk_level(features):
     risk_score = 0
@@ -38,15 +40,16 @@ def calculate_clv(features):
 def home():
     return render_template('home.html')
 
+with open("pred_churn.pkl", "rb") as f:
+    model = pickle.load(f)
+with open("ohe_encoder.pkl", "rb") as f:
+    ohe = pickle.load(f)
+
 @app.route("/predict", methods=['POST', 'GET'])
 def predict():
     if request.method == 'POST':
+        session.permanent = True
         try:
-            with open("pred_churn.pkl", "rb") as f:
-                model = pickle.load(f)
-            with open("ohe_encoder.pkl", "rb") as f:
-                ohe = pickle.load(f)
-
             user_data = {
                 'age': int(request.form['age']),
                 'gender': request.form['gender'],
@@ -75,6 +78,9 @@ def predict():
             session['res'] = "Churned" if prediction == 1 else "Not Churned"
             session['risk_level'] = user_data['risk_level']
             session['clv'] = clv
+
+            print(f"Session Data: {session['res']}, {session['risk_level']}, {session['clv']}")
+            flash(f"Customer churn: {session['res']}, Risk Level: {session['risk_level']}, CLV: ${session['clv']:.2f}", "success")
             return redirect(url_for("result"))
         except Exception as e:
             flash(f"Error: {str(e)}")
@@ -87,10 +93,12 @@ def result():
     res = session.get("res")
     rl = session.get("risk_level")
     clv = session.get("clv")
-    if res is None:
+
+    if res is None or rl is None or clv is None:
+        flash("Error: No result data found. Please try submitting the form again.", "danger")
         return redirect(url_for("predict"))
+                        
     return render_template('result.html', res=res, risk_level=rl, clv=clv)
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=port)
-    # app.run(debug=True, port=5000)
+    app.run(debug=True)
